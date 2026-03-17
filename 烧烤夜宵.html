@@ -1,263 +1,220 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<title>烧烤店夜宵店门头设计AI · 夜经济炸街版</title>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>烧烤夜宵门头生成器 · 合作伙伴级</title>
+
 <style>
 *{
   box-sizing: border-box;
   margin:0;
   padding:0;
 }
+
 body{
   font-family: "Microsoft YaHei", sans-serif;
-  background: linear-gradient(135deg, #1A1A1A 0%, #2C1A1A 100%);
-  min-height: 100vh;
-  padding-bottom: 60px;
+  background: linear-gradient(135deg,#0f0f0f,#1f1f1f,#2a1a1a);
+  min-height:100vh;
+  color:#fff;
 }
-/* 顶部大标题长条 - 夜宵烧烤红橙色系 */
+
+/* 顶部 */
 .header{
-  width: 100%;
-  background: linear-gradient(90deg, #FF3C00, #FF7700);
-  color: #fff;
-  text-align: center;
-  padding: 50px 20px;
-  margin-bottom: 40px;
-  box-shadow: 0 4px 20px rgba(255, 60, 0, 0.2);
+  text-align:center;
+  padding:60px 20px;
+  background: linear-gradient(90deg,#ff3c00,#ff7a00,#ffb347);
+  -webkit-background-clip:text;
+  color:transparent;
 }
+
 .header h1{
-  font-size: 32px;
-  margin-bottom: 8px;
+  font-size:34px;
+  font-weight:800;
 }
+
 .header p{
-  font-size: 16px;
-  opacity: 0.95;
+  color:#aaa;
+  margin-top:10px;
 }
-/* 内容卡片 */
+
+/* 主卡片 */
 .container{
-  max-width: 800px;
-  margin: 0 auto;
-  background: #fff;
-  border-radius: 20px;
-  padding: 45px 40px;
-  box-shadow: 0 10px 40px rgba(255, 60, 0, 0.08);
+  max-width:900px;
+  margin:0 auto;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  border-radius:20px;
+  padding:40px;
+  box-shadow:0 10px 40px rgba(255,60,0,0.2);
+  border:1px solid rgba(255,255,255,0.08);
 }
-/* 输入提示 */
-.input-label{
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 10px;
-  text-align: left;
-  font-weight: 500;
-}
-/* 输入框 */
+
+/* 输入 */
 .input-box{
-  width: 100%;
-  padding: 16px 20px;
-  font-size: 16px;
-  border: 1px solid #DCDFE6;
-  border-radius: 12px;
-  outline: none;
-  transition: 0.3s;
-  margin-bottom: 22px;
+  width:100%;
+  padding:16px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  font-size:16px;
+  margin-bottom:20px;
+  background: rgba(255,255,255,0.08);
+  color:#fff;
 }
-.input-box:focus{
-  border-color: #FF3C00;
-  box-shadow: 0 0 0 4px rgba(255, 60, 0, 0.1);
-}
-/* 生成按钮 */
+
+/* 按钮 */
 .btn{
-  width: 100%;
-  padding: 17px;
-  background: linear-gradient(90deg, #FF3C00, #FF7700);
-  color: #fff;
-  font-size: 17px;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:12px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  background: linear-gradient(90deg,#ff3c00,#ff7a00);
+  color:#fff;
+  transition:0.3s;
 }
+
 .btn:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 60, 0, 0.2);
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(255,60,0,0.4);
 }
-.btn:disabled{
-  background: #FF9F7F;
-  cursor: not-allowed;
-  transform: none;
-}
-/* 结果区域 */
+
+/* 结果 */
 .result{
-  max-width: 800px;
-  margin: 40px auto 0;
-  padding: 0 20px;
+  max-width:900px;
+  margin:40px auto;
 }
+
+/* 卡片 */
 .item{
-  background: #fff;
-  padding: 18px 22px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  line-height: 1.6;
-  font-size: 15px;
-  border-left: 5px solid #FF3C00;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.06);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:14px;
+  padding:18px;
+  border-radius:14px;
+  background: linear-gradient(135deg,rgba(255,60,0,0.15),rgba(255,120,0,0.05));
+  border:1px solid rgba(255,120,0,0.3);
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
 }
+
+/* 文本 */
 .item-text{
-  flex: 1;
+  flex:1;
+  font-size:14px;
+  line-height:1.6;
+  color:#eee;
 }
+
 /* 复制按钮 */
 .copy-btn{
-  padding: 8px 14px;
-  background: #FF3C00;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s;
-  white-space: nowrap;
+  padding:8px 14px;
+  border:none;
+  border-radius:8px;
+  background:#ff3c00;
+  color:#fff;
+  cursor:pointer;
 }
-.copy-btn:hover{
-  background: #E02A00;
-}
-/* 已复制永久灰色样式 */
+
 .copy-btn.copied{
-  background: #cccccc !important;
-  color: #666666 !important;
-  cursor: default !important;
+  background:#555;
 }
-/* 一键复制全部 */
-.copy-all-box{
-  text-align: center;
-  margin-top: 20px;
+
+/* 一键复制 */
+.copy-all{
+  text-align:center;
+  margin-top:20px;
 }
-.copy-all-btn{
-  padding: 12px 24px;
-  background: #FF3C00;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  cursor: pointer;
+
+.copy-all button{
+  padding:12px 30px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,#ff3c00,#ff7a00);
+  color:#fff;
+  cursor:pointer;
 }
-.copy-all-btn:hover{
-  background: #E02A00;
-}
+
 </style>
+</head>
 
-<!-- 顶部大标题 -->
+<body>
+
 <div class="header">
-  <h1>🍢🔥 烧烤店夜宵店门头设计AI · 炸街版</h1>
-  <p>夜经济·烟火气·强存在感·远距离吸引·高进店率</p>
+  <h1>🔥 烧烤夜宵门头生成器 · 高级合作版</h1>
+  <p>夜经济 · 烟火气 · 炸街引流 · 高转化门头设计</p>
 </div>
 
-<!-- 内容区 -->
 <div class="container">
-  <div class="input-label">在此输入你的需求（店名/品类/风格）：</div>
-  <input type="text" class="input-box" id="input" placeholder="例如：夜烤天下 烧烤店 市井烟火 大字发光字 暖色灯光">
-  <button class="btn" onclick="go()" id="generateBtn">✨ 生成10组提示词</button>
+  <input id="input" class="input-box" placeholder="输入：店名+品类+风格（例：夜烤天下 烧烤店 市井烟火）">
+  <button class="btn" onclick="go()">✨ 生成20组高级提示词</button>
 </div>
 
-<!-- 结果展示区 -->
 <div class="result" id="result"></div>
 
 <script>
-// 烧烤夜宵店门头全套规则（完全按你写的）
-const 烧烤夜宵配置 = {
-  核心风格: "夜间氛围感、烟火气、强存在感、炸街吸引、营业感足、热闹有食欲、市井感、夜市感、朋友聚餐感",
-  材质库: [
-    "烤漆板","大字发光字","吸塑发光字","亚克力围边发光字",
-    "铁皮字外露灯泡字","局部灯箱画面","局部木纹点缀"
-  ],
-  灯光策略: "亮度高于周边、大字号发光字、灯泡字、灯箱内打光、暖色色温偏黄偏橙、热气腾腾炭火感、无冷白光",
-  色彩体系: "红色、橙色、黄色、深棕色、黑色高对比配色、热烈不冷清、有烟火气、油滋滋烤串视觉联想",
-  结构布局: "横向展开、字大信息少、店名醒目、品类直接、一眼识别、无复杂造型、无碎信息",
-  字体设计: "粗体、手写感、力量感强、笔画厚重、夜间远距识别、有力有存在感",
-  固定必含: "完整正立面、落地玻璃门、品牌名、广告语、产品海报展架、白天自然光、高辨识度、高对比配色、非摊位、非附墙、非临时结构",
-  负向提示: "非摊位、非推车、非夜市临时铺、非挂靠招牌、非附墙门头、非临时结构、非局部门头",
-  结尾固定: "门头正立面效果完全展示"
+
+const 广告语库 = [
+"深夜不打烊","越晚越火爆","人间烟火天花板","夜宵顶流聚集地",
+"烧烤界天花板","来晚没位置","越夜越有味","兄弟聚会首选",
+"城市深夜食堂","一口上瘾","排队王","喝酒撸串首选",
+"本地人都来吃","老板不怕你吃多","凌晨三点还爆满",
+"宵夜界顶流","烧烤界扛把子","吃过都回头","香到隔壁街"
+]
+
+function 随机(arr){
+  return arr[Math.floor(Math.random()*arr.length)]
 }
 
-let 当前需求 = ''
-let 所有提示词 = []
-
-// 随机选取
-function 随机取(arr, min, max) {
-  let count = Math.floor(Math.random() * (max - min + 1)) + min
-  let shuffled = [...arr].sort(() => Math.random() - 0.5)
-  return shuffled.slice(0, count).join('、')
+function 生成(需求){
+  return `夜间烟火气、强存在感、炸街引流、${需求}，大字发光字+灯泡字+亚克力，红橙色高饱和配色，横向展开结构，粗体手写字体，门头完整正立面展示，广告语「${随机(广告语库)}」，高对比灯光氛围，门头正立面效果完全展示`
 }
 
-// 生成单条（严格按你输出规则）
-function 生成单条(需求) {
-  let 材质 = 随机取(烧烤夜宵配置.材质库, 2, 3)
-  let 色彩灯光 = 随机取([烧烤夜宵配置.灯光策略, 烧烤夜宵配置.色彩体系],1,1)
-  return `${烧烤夜宵配置.核心风格}，${需求}，${材质}，${色彩灯光}，${烧烤夜宵配置.结构布局}，${烧烤夜宵配置.字体设计}，${烧烤夜宵配置.固定必含}，${烧烤夜宵配置.负向提示}，${烧烤夜宵配置.结尾固定}`
-}
-
-// 生成10组
-function 生成10组(需求) {
-  var arr = []
-  for(var i=0;i<10;i++){
-    arr.push(生成单条(需求))
-  }
-  return arr
-}
-
-// 复制单条 → 永久变灰
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    btn.classList.add('copied')
-  })
-}
-
-// 一键复制全部
-function copyAll() {
-  navigator.clipboard.writeText(所有提示词.join("\n\n")).then(() => {
-    alert("✅ 已复制全部 10 组烧烤夜宵店门头提示词！")
-  })
-}
-
-// 主生成逻辑
-function go() {
-  const btn = document.getElementById('generateBtn')
-  var val = document.getElementById('input').value.trim()
-  
-  if (!val) {
-    alert("请输入需求，例如：夜烤天下 烧烤店 市井烟火 大字发光字")
+function go(){
+  let val = document.getElementById("input").value.trim()
+  if(!val){
+    alert("请输入内容")
     return
   }
 
-  btn.disabled = true
-  btn.innerText = "⏳ 正在生成..."
+  let html = ""
+  let all = []
 
-  setTimeout(() => {
-    当前需求 = val
-    var list = 生成10组(当前需求)
-    所有提示词 = list
-    var html = ''
-    
-    list.forEach((item, index) => {
-      html += `
-      <div class="item">
-        <div class="item-text">${index+1}. ${item}</div>
-        <button class="copy-btn" onclick="copyText('${item.replace(/'/g, '&apos;')}', this)">复制</button>
-      </div>`
-    })
-    
+  for(let i=0;i<20;i++){
+    let text = 生成(val)
+    all.push(text)
+
     html += `
-    <div class="copy-all-box">
-      <button class="copy-all-btn" onclick="copyAll()">📋 一键复制全部10组</button>
+    <div class="item">
+      <div class="item-text">${i+1}. ${text}</div>
+      <button class="copy-btn" onclick="copy(this,'${text}')">复制</button>
     </div>`
-    
-    document.getElementById('result').innerHTML = html
-    btn.disabled = false
-    btn.innerText = "✨ 生成10组提示词"
-  }, 600)
+  }
+
+  html += `
+  <div class="copy-all">
+    <button onclick="copyAll()">📋 一键复制全部</button>
+  </div>`
+
+  document.getElementById("result").innerHTML = html
+  window.allData = all
 }
+
+function copy(btn,text){
+  navigator.clipboard.writeText(text)
+  btn.classList.add("copied")
+}
+
+function copyAll(){
+  navigator.clipboard.writeText(window.allData.join("\n\n"))
+  alert("已复制全部20组")
+}
+
 </script>
+
 </body>
 </html>
