@@ -2,176 +2,104 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>烧烤夜宵门头生成器 · 合作伙伴级</title>
+<title>烧烤夜宵门头生成器 · 无重复高级版</title>
 
 <style>
-*{
-  box-sizing: border-box;
-  margin:0;
-  padding:0;
-}
-
 body{
-  font-family: "Microsoft YaHei", sans-serif;
-  background: linear-gradient(135deg,#0f0f0f,#1f1f1f,#2a1a1a);
-  min-height:100vh;
+  font-family:"Microsoft YaHei";
+  background:#111;
   color:#fff;
-}
-
-/* 顶部 */
-.header{
-  text-align:center;
-  padding:60px 20px;
-  background: linear-gradient(90deg,#ff3c00,#ff7a00,#ffb347);
-  -webkit-background-clip:text;
-  color:transparent;
-}
-
-.header h1{
-  font-size:34px;
-  font-weight:800;
-}
-
-.header p{
-  color:#aaa;
-  margin-top:10px;
-}
-
-/* 主卡片 */
-.container{
-  max-width:900px;
-  margin:0 auto;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(20px);
-  border-radius:20px;
   padding:40px;
-  box-shadow:0 10px 40px rgba(255,60,0,0.2);
-  border:1px solid rgba(255,255,255,0.08);
 }
 
-/* 输入 */
-.input-box{
+input{
   width:100%;
-  padding:16px;
-  border-radius:12px;
+  padding:14px;
+  border-radius:10px;
   border:none;
-  outline:none;
-  font-size:16px;
   margin-bottom:20px;
-  background: rgba(255,255,255,0.08);
-  color:#fff;
 }
 
-/* 按钮 */
-.btn{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:12px;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-  background: linear-gradient(90deg,#ff3c00,#ff7a00);
-  color:#fff;
-  transition:0.3s;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 25px rgba(255,60,0,0.4);
-}
-
-/* 结果 */
-.result{
-  max-width:900px;
-  margin:40px auto;
-}
-
-/* 卡片 */
-.item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:14px;
-  padding:18px;
-  border-radius:14px;
-  background: linear-gradient(135deg,rgba(255,60,0,0.15),rgba(255,120,0,0.05));
-  border:1px solid rgba(255,120,0,0.3);
-  box-shadow:0 6px 20px rgba(0,0,0,0.3);
-}
-
-/* 文本 */
-.item-text{
-  flex:1;
-  font-size:14px;
-  line-height:1.6;
-  color:#eee;
-}
-
-/* 复制按钮 */
-.copy-btn{
-  padding:8px 14px;
-  border:none;
-  border-radius:8px;
+button{
+  padding:12px 20px;
   background:#ff3c00;
   color:#fff;
-  cursor:pointer;
-}
-
-.copy-btn.copied{
-  background:#555;
-}
-
-/* 一键复制 */
-.copy-all{
-  text-align:center;
-  margin-top:20px;
-}
-
-.copy-all button{
-  padding:12px 30px;
   border:none;
-  border-radius:10px;
-  background:linear-gradient(90deg,#ff3c00,#ff7a00);
-  color:#fff;
+  border-radius:8px;
   cursor:pointer;
 }
 
+.item{
+  background:#1c1c1c;
+  padding:15px;
+  margin-top:10px;
+  border-radius:10px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>🔥 烧烤夜宵门头生成器 · 高级合作版</h1>
-  <p>夜经济 · 烟火气 · 炸街引流 · 高转化门头设计</p>
-</div>
+<h2>🔥 无重复烧烤门头提示词生成器</h2>
 
-<div class="container">
-  <input id="input" class="input-box" placeholder="输入：店名+品类+风格（例：夜烤天下 烧烤店 市井烟火）">
-  <button class="btn" onclick="go()">✨ 生成20组高级提示词</button>
-</div>
+<input id="input" placeholder="输入：店名+品类+风格">
+<button onclick="go()">生成20组</button>
 
-<div class="result" id="result"></div>
+<div id="box"></div>
 
 <script>
 
-const 广告语库 = [
-"深夜不打烊","越晚越火爆","人间烟火天花板","夜宵顶流聚集地",
-"烧烤界天花板","来晚没位置","越夜越有味","兄弟聚会首选",
-"城市深夜食堂","一口上瘾","排队王","喝酒撸串首选",
-"本地人都来吃","老板不怕你吃多","凌晨三点还爆满",
-"宵夜界顶流","烧烤界扛把子","吃过都回头","香到隔壁街"
+// 各模块库
+const 风格 = ["烟火气爆棚","夜市感十足","城市夜经济核心","年轻人聚集地","深夜食堂氛围","强社交属性","夜宵王者气场"]
+const 材质 = ["大字发光字","灯泡字","亚克力发光字","吸塑灯箱","霓虹灯","铁艺灯牌"]
+const 灯光 = ["暖橙色灯光","高亮对比光","炭火氛围光","局部打光","泛光照明"]
+const 色彩 = ["红橙撞色","黑红高对比","暖黄主调","橙色渐变","深色底+高亮字"]
+const 字体 = ["粗体手写","力量字体","街头风字体","厚重字体","醒目大字"]
+const 广告语 = [
+"深夜不打烊","越晚越火爆","烧烤界顶流","排队王","人间烟火天花板",
+"凌晨三点还爆满","兄弟聚会首选","一口上瘾","本地人都来吃","夜宵界王者"
 ]
 
-function 随机(arr){
+const 结构 = [
+["风格","需求","材质","灯光","色彩","字体","广告语"],
+["需求","风格","灯光","材质","字体","广告语","色彩"],
+["风格","材质","需求","色彩","灯光","广告语","字体"],
+["需求","材质","风格","字体","灯光","色彩","广告语"]
+]
+
+// 随机取
+function r(arr){
   return arr[Math.floor(Math.random()*arr.length)]
 }
 
-function 生成(需求){
-  return `夜间烟火气、强存在感、炸街引流、${需求}，大字发光字+灯泡字+亚克力，红橙色高饱和配色，横向展开结构，粗体手写字体，门头完整正立面展示，广告语「${随机(广告语库)}」，高对比灯光氛围，门头正立面效果完全展示`
+// 生成一条（结构也随机）
+function 生成单条(需求){
+  let map = {
+    风格:r(风格),
+    材质:r(材质),
+    灯光:r(灯光),
+    色彩:r(色彩),
+    字体:r(字体),
+    广告语:"广告语「"+r(广告语)+"」",
+    需求:需求
+  }
+
+  let s = r(结构)
+
+  let result = s.map(k=>map[k]).join("，")
+
+  return result + "，门头正立面效果完全展示"
+}
+
+// 去重
+function 生成20组(需求){
+  let set = new Set()
+
+  while(set.size < 20){
+    set.add(生成单条(需求))
+  }
+
+  return [...set]
 }
 
 function go(){
@@ -181,37 +109,14 @@ function go(){
     return
   }
 
+  let list = 生成20组(val)
+
   let html = ""
-  let all = []
+  list.forEach((t,i)=>{
+    html += `<div class="item">${i+1}. ${t}</div>`
+  })
 
-  for(let i=0;i<20;i++){
-    let text = 生成(val)
-    all.push(text)
-
-    html += `
-    <div class="item">
-      <div class="item-text">${i+1}. ${text}</div>
-      <button class="copy-btn" onclick="copy(this,'${text}')">复制</button>
-    </div>`
-  }
-
-  html += `
-  <div class="copy-all">
-    <button onclick="copyAll()">📋 一键复制全部</button>
-  </div>`
-
-  document.getElementById("result").innerHTML = html
-  window.allData = all
-}
-
-function copy(btn,text){
-  navigator.clipboard.writeText(text)
-  btn.classList.add("copied")
-}
-
-function copyAll(){
-  navigator.clipboard.writeText(window.allData.join("\n\n"))
-  alert("已复制全部20组")
+  document.getElementById("box").innerHTML = html
 }
 
 </script>
