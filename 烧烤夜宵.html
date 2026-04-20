@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>烧烤夜宵门头生成器 · 商业增强版 V3</title>
+<title>烧烤夜宵门头生成器 · 视角锁定增强版 V3</title>
 
 <style>
 body{
@@ -12,11 +12,8 @@ body{
   padding:40px;
 }
 
-h2{
-  margin-bottom:20px;
-}
+h2{margin-bottom:20px;}
 
-/* 输入区 */
 input{
   width:100%;
   padding:14px;
@@ -46,7 +43,7 @@ button{
   overflow:hidden;
 }
 
-/* 左侧内容 90% */
+/* 左侧内容 */
 .text{
   flex:9;
   padding:14px;
@@ -55,7 +52,7 @@ button{
   white-space:pre-wrap;
 }
 
-/* 右侧按钮 10% */
+/* 右侧按钮 */
 .action{
   flex:1;
   display:flex;
@@ -81,19 +78,14 @@ button{
   transition:0.2s;
 }
 
-.copy-btn:hover{
-  transform:scale(1.1);
-}
-
-.copy-btn:active{
-  transform:scale(0.95);
-}
+.copy-btn:hover{transform:scale(1.1);}
+.copy-btn:active{transform:scale(0.95);}
 </style>
 </head>
 
 <body>
 
-<h2>🔥 烧烤夜宵门头AI · 商业结构增强版 V3</h2>
+<h2>🔥 烧烤夜宵门头AI · 视角锁定增强版 V3</h2>
 
 <input id="input" placeholder="输入：店名 + 品类 + 风格（如：老王烧烤 夜宵 烟火气）">
 <button onclick="go()">生成20组商业门头提示词</button>
@@ -156,6 +148,19 @@ const system = {
     "凌晨三点还爆满",
     "本地人必吃",
     "烧烤界顶流"
+  ],
+
+  /* =========================
+     视角锁定系统（核心升级）
+  ========================= */
+  视角锁定:[
+    "必须100%正面平视拍摄",
+    "镜头与门头立面完全垂直",
+    "禁止侧拍/斜拍/45度视角",
+    "禁止透视变形",
+    "建筑左右完全对称构图",
+    "商业街真实立面视角",
+    "行人视角高度拍摄"
   ]
 }
 
@@ -171,7 +176,7 @@ function r(arr){
    生成逻辑
 ========================= */
 
-function build(name, i){
+function build(name){
 
   return `
 【商业烧烤夜宵门头设计】
@@ -187,15 +192,21 @@ function build(name, i){
 
 色彩：${r(system.色彩)}
 
-传播语：${r(system.爆款)}
+爆款传播语：${r(system.爆款)}
 
-核心要求：
+🔥 核心要求：
 5秒远距离识别 / 3秒记住品牌 / 1秒产生食欲
 
-结构要求：
-正面商业街门头真实场景，
-可施工落地结构设计，
-夜间高亮识别系统，
+📌 结构要求：
+${system.视角锁定.join("，")}
+
+🏗 建筑要求：
+完整实体门头结构（招牌+灯箱+橱窗+玻璃门），
+真实商业街可施工落地设计，
+
+🎯 最终效果：
+高人流吸引商业门头设计，
+夜间强识别系统，
 提升进店转化率`
 }
 
