@@ -2,121 +2,264 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>烧烤夜宵门头生成器 · 无重复高级版</title>
+<title>烧烤夜宵门头生成器 · 商业增强版 V3</title>
 
 <style>
 body{
   font-family:"Microsoft YaHei";
-  background:#111;
+  background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
   color:#fff;
   padding:40px;
 }
 
+h2{
+  margin-bottom:20px;
+}
+
+/* 输入区 */
 input{
   width:100%;
   padding:14px;
   border-radius:10px;
   border:none;
-  margin-bottom:20px;
+  margin-bottom:15px;
 }
 
 button{
   padding:12px 20px;
-  background:#ff3c00;
+  background:linear-gradient(90deg,#ff3c00,#ff8a00);
   color:#fff;
   border:none;
   border-radius:8px;
   cursor:pointer;
+  font-weight:bold;
 }
 
+/* 卡片 */
 .item{
+  display:flex;
+  align-items:stretch;
   background:#1c1c1c;
-  padding:15px;
   margin-top:10px;
   border-radius:10px;
+  border:1px solid rgba(255,60,0,0.2);
+  overflow:hidden;
+}
+
+/* 左侧内容 90% */
+.text{
+  flex:9;
+  padding:14px;
+  line-height:1.6;
+  font-size:14px;
+  white-space:pre-wrap;
+}
+
+/* 右侧按钮 10% */
+.action{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#151515;
+  border-left:1px solid rgba(255,60,0,0.2);
+}
+
+/* 复制按钮 */
+.copy-btn{
+  width:28px;
+  height:28px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff3c00,#ff8a00);
+  color:#fff;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s;
+}
+
+.copy-btn:hover{
+  transform:scale(1.1);
+}
+
+.copy-btn:active{
+  transform:scale(0.95);
 }
 </style>
 </head>
 
 <body>
 
-<h2>🔥 无重复烧烤门头提示词生成器</h2>
+<h2>🔥 烧烤夜宵门头AI · 商业结构增强版 V3</h2>
 
-<input id="input" placeholder="输入：店名+品类+风格">
-<button onclick="go()">生成20组</button>
+<input id="input" placeholder="输入：店名 + 品类 + 风格（如：老王烧烤 夜宵 烟火气）">
+<button onclick="go()">生成20组商业门头提示词</button>
 
 <div id="box"></div>
 
 <script>
 
-// 各模块库
-const 风格 = ["烟火气爆棚","夜市感十足","城市夜经济核心","年轻人聚集地","深夜食堂氛围","强社交属性","夜宵王者气场"]
-const 材质 = ["大字发光字","灯泡字","亚克力发光字","吸塑灯箱","霓虹灯","铁艺灯牌"]
-const 灯光 = ["暖橙色灯光","高亮对比光","炭火氛围光","局部打光","泛光照明"]
-const 色彩 = ["红橙撞色","黑红高对比","暖黄主调","橙色渐变","深色底+高亮字"]
-const 字体 = ["粗体手写","力量字体","街头风字体","厚重字体","醒目大字"]
-const 广告语 = [
-"深夜不打烊","越晚越火爆","烧烤界顶流","排队王","人间烟火天花板",
-"凌晨三点还爆满","兄弟聚会首选","一口上瘾","本地人都来吃","夜宵界王者"
-]
+/* =========================
+   商业系统库
+========================= */
 
-const 结构 = [
-["风格","需求","材质","灯光","色彩","字体","广告语"],
-["需求","风格","灯光","材质","字体","广告语","色彩"],
-["风格","材质","需求","色彩","灯光","广告语","字体"],
-["需求","材质","风格","字体","灯光","色彩","广告语"]
-]
+const system = {
+  场景:[
+    "夜市核心流量区",
+    "社区深夜消费区",
+    "商业街黄金铺位",
+    "大学夜宵聚集区",
+    "网红打卡街区"
+  ],
 
-// 随机取
+  风格:[
+    "烟火气爆棚",
+    "深夜食堂氛围",
+    "夜市霸主气场",
+    "年轻社交聚集地",
+    "城市夜经济核心"
+  ],
+
+  材质:[
+    "通体发光大字",
+    "亚克力灯箱",
+    "金属烤漆边框",
+    "LED霓虹灯管",
+    "吸塑立体发光字"
+  ],
+
+  灯光:[
+    "暖橙炭火光",
+    "高亮对比夜光",
+    "局部重点打光",
+    "柔光漫射系统",
+    "霓虹氛围灯光"
+  ],
+
+  色彩:[
+    "红橙高食欲配色",
+    "黑红强对比冲击",
+    "橙黄渐变炭火感",
+    "暖黄夜宵氛围",
+    "深色底+亮色字"
+  ],
+
+  爆款:[
+    "深夜不打烊",
+    "越夜越火爆",
+    "排队王门店",
+    "夜宵界天花板",
+    "一口上瘾",
+    "凌晨三点还爆满",
+    "本地人必吃",
+    "烧烤界顶流"
+  ]
+}
+
+/* =========================
+   工具函数
+========================= */
+
 function r(arr){
   return arr[Math.floor(Math.random()*arr.length)]
 }
 
-// 生成一条（结构也随机）
-function 生成单条(需求){
-  let map = {
-    风格:r(风格),
-    材质:r(材质),
-    灯光:r(灯光),
-    色彩:r(色彩),
-    字体:r(字体),
-    广告语:"广告语「"+r(广告语)+"」",
-    需求:需求
-  }
+/* =========================
+   生成逻辑
+========================= */
 
-  let s = r(结构)
+function build(name, i){
 
-  let result = s.map(k=>map[k]).join("，")
+  return `
+【商业烧烤夜宵门头设计】
 
-  return result + "，门头正立面效果完全展示"
+品牌：${name}
+场景：${r(system.场景)}
+
+风格：${r(system.风格)}
+
+材质：${r(system.材质)}
+
+灯光：${r(system.灯光)}
+
+色彩：${r(system.色彩)}
+
+传播语：${r(system.爆款)}
+
+核心要求：
+5秒远距离识别 / 3秒记住品牌 / 1秒产生食欲
+
+结构要求：
+正面商业街门头真实场景，
+可施工落地结构设计，
+夜间高亮识别系统，
+提升进店转化率`
 }
 
-// 去重
-function 生成20组(需求){
-  let set = new Set()
+/* =========================
+   去重生成
+========================= */
+
+function gen20(name){
+
+  let set = new Map()
 
   while(set.size < 20){
-    set.add(生成单条(需求))
+    let t = build(name)
+    set.set(t, t)
   }
 
-  return [...set]
+  return [...set.values()]
 }
 
+/* =========================
+   渲染
+========================= */
+
 function go(){
+
   let val = document.getElementById("input").value.trim()
   if(!val){
     alert("请输入内容")
     return
   }
 
-  let list = 生成20组(val)
+  window.DATA = gen20(val)
 
   let html = ""
-  list.forEach((t,i)=>{
-    html += `<div class="item">${i+1}. ${t}</div>`
+
+  window.DATA.forEach((t,i)=>{
+    html += `
+    <div class="item">
+      <div class="text">${i+1}. ${t}</div>
+      <div class="action">
+        <button class="copy-btn" onclick="copy(${i},this)">⧉</button>
+      </div>
+    </div>
+    `
   })
 
   document.getElementById("box").innerHTML = html
+}
+
+/* =========================
+   复制功能
+========================= */
+
+function copy(index,btn){
+
+  navigator.clipboard.writeText(window.DATA[index])
+
+  btn.innerHTML = "✓"
+  btn.style.background = "#555"
+
+  setTimeout(()=>{
+    btn.innerHTML = "⧉"
+    btn.style.background = "linear-gradient(135deg,#ff3c00,#ff8a00)"
+  },800)
 }
 
 </script>
