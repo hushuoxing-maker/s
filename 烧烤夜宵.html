@@ -1,279 +1,1150 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>烧烤夜宵门头生成器 · 视角锁定增强版 V3</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>烧烤夜宵门头生成器 · 旗舰版 V6</title>
 
-<style>
-body{
-  font-family:"Microsoft YaHei";
-  background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
-  color:#fff;
-  padding:40px;
-}
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --card: #1a1a1a;
+            --card-hover: #1e1e1e;
+            --accent: #d4783b;
+            --accent-soft: rgba(212, 120, 59, 0.15);
+            --accent-glow: rgba(212, 120, 59, 0.3);
+            --gold: #c89b64;
+            --gold-soft: rgba(200, 155, 100, 0.12);
+            --border: rgba(255, 255, 255, 0.06);
+            --border-accent: rgba(212, 120, 59, 0.2);
+            --text: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #777;
+            --tag-bg: rgba(255, 255, 255, 0.04);
+            --tag-border: rgba(255, 255, 255, 0.08);
+            --font-mono: "SF Mono", "Fira Code", "Consolas", "Menlo", monospace;
+        }
 
-h2{margin-bottom:20px;}
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", -apple-system, sans-serif;
+            background: #080808;
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(212, 120, 59, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(200, 155, 100, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 60%, rgba(180, 100, 40, 0.02) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: #fff;
+            padding: 36px 20px 80px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            width: 100%;
+            max-width: 960px;
+        }
 
-input{
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:none;
-  margin-bottom:15px;
-}
+        /* ========== HEADER ========== */
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+        .header .icon {
+            font-size: 44px;
+            display: block;
+            margin-bottom: 4px;
+            animation: headerGlow 3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 18px rgba(212, 120, 59, 0.5));
+        }
+        @keyframes headerGlow {
+            0% {
+                filter: drop-shadow(0 0 12px rgba(212, 120, 59, 0.4));
+            }
+            100% {
+                filter: drop-shadow(0 0 28px rgba(212, 120, 59, 0.75));
+            }
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 27px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            background: linear-gradient(135deg, #e8c596 0%, #d4893a 40%, #c87830 70%, #e8c596 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShimmer 4s ease-in-out infinite;
+        }
+        @keyframes titleShimmer {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        .header .badge {
+            display: inline-block;
+            margin-top: 7px;
+            font-size: 10.5px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            background: rgba(200, 155, 100, 0.1);
+            border: 1px solid rgba(200, 155, 100, 0.2);
+            color: #c89b64;
+            letter-spacing: 2px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
 
-button{
-  padding:12px 20px;
-  background:linear-gradient(90deg,#ff3c00,#ff8a00);
-  color:#fff;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
+        /* ========== PANEL ========== */
+        .panel {
+            background: #111111;
+            border-radius: 18px;
+            padding: 28px 30px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(4px);
+        }
+        .label-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 7px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #bbb;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+        }
+        .label-row .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #d4783b;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(212, 120, 59, 0.6);
+        }
 
-/* 卡片 */
-.item{
-  display:flex;
-  align-items:stretch;
-  background:#1c1c1c;
-  margin-top:10px;
-  border-radius:10px;
-  border:1px solid rgba(255,60,0,0.2);
-  overflow:hidden;
-}
+        /* 输入框 */
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 18px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            background: #0f0f0f;
+            color: #e8e8e8;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #c89b64;
+            box-shadow: 0 0 0 4px rgba(200, 155, 100, 0.06), 0 0 20px rgba(200, 155, 100, 0.04);
+            background: #121212;
+        }
+        input[type="text"]::placeholder {
+            color: #555;
+        }
 
-/* 左侧内容 */
-.text{
-  flex:9;
-  padding:14px;
-  line-height:1.6;
-  font-size:14px;
-  white-space:pre-wrap;
-}
+        /* 选择器行 */
+        .select-row {
+            display: flex;
+            gap: 14px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .select-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        .select-group label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #999;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .select-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            background: #0f0f0f;
+            color: #e0e0e0;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 38px;
+            letter-spacing: 0.3px;
+        }
+        .select-group select:focus {
+            outline: none;
+            border-color: #c89b64;
+            box-shadow: 0 0 0 3px rgba(200, 155, 100, 0.05);
+            background: #121212;
+        }
+        .select-group select option {
+            background: #1a1a1a;
+            color: #fff;
+        }
 
-/* 右侧按钮 */
-.action{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#151515;
-  border-left:1px solid rgba(255,60,0,0.2);
-}
+        /* 风格图框 */
+        .style-selector {
+            margin-top: 20px;
+        }
+        .style-selector .label-row {
+            margin-bottom: 10px;
+        }
+        .style-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+        .style-card {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 13px;
+            font-weight: 500;
+            color: #999;
+            user-select: none;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+        .style-card:hover {
+            border-color: rgba(200, 155, 100, 0.35);
+            background: rgba(200, 155, 100, 0.05);
+            color: #d4c0a0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        .style-card.selected {
+            background: rgba(200, 155, 100, 0.1);
+            border-color: #c89b64;
+            color: #e8c596;
+            box-shadow: 0 0 18px rgba(200, 155, 100, 0.12);
+            font-weight: 600;
+        }
+        .style-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .style-card.random-card {
+            border-style: dashed;
+        }
+        .style-card.random-card.selected {
+            border-style: solid;
+        }
 
-/* 复制按钮 */
-.copy-btn{
-  width:28px;
-  height:28px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-  background:linear-gradient(135deg,#ff3c00,#ff8a00);
-  color:#fff;
-  font-size:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:0.2s;
-}
+        /* 生成按钮 */
+        .btn-generate {
+            display: block;
+            width: 100%;
+            margin-top: 22px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #c87830, #d4893a, #c87830);
+            background-size: 200% 200%;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 15.5px;
+            letter-spacing: 1.2px;
+            transition: all 0.35s;
+            box-shadow: 0 6px 28px rgba(180, 100, 40, 0.25);
+            font-family: inherit;
+            animation: btnPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes btnPulse {
+            0%,
+            100% {
+                box-shadow: 0 6px 28px rgba(180, 100, 40, 0.25);
+            }
+            50% {
+                box-shadow: 0 8px 36px rgba(180, 100, 40, 0.4);
+            }
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(180, 100, 40, 0.45);
+            background-position: 100% 50%;
+        }
+        .btn-generate:active {
+            transform: scale(0.97);
+            box-shadow: 0 3px 12px rgba(180, 100, 40, 0.3);
+            transition: all 0.1s;
+        }
 
-.copy-btn:hover{transform:scale(1.1);}
-.copy-btn:active{transform:scale(0.95);}
-</style>
+        /* 信息条 */
+        .info-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 10px 15px;
+            background: rgba(200, 155, 100, 0.04);
+            border-radius: 8px;
+            font-size: 11.5px;
+            color: #a08060;
+            letter-spacing: 0.4px;
+            border: 1px solid rgba(200, 155, 100, 0.1);
+        }
+
+        /* ========== RESULTS ========== */
+        #box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* 单条结果卡片 */
+        .result-card {
+            background: #151515;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+        }
+        .result-card:hover {
+            border-color: rgba(200, 155, 100, 0.2);
+            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(200, 155, 100, 0.06);
+            background: #181818;
+        }
+
+        /* 卡片主体 */
+        .card-body {
+            display: flex;
+            align-items: stretch;
+        }
+        .card-index {
+            flex: 0 0 48px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 18px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #c89b64;
+            background: rgba(200, 155, 100, 0.03);
+            letter-spacing: 1px;
+            font-family: var(--font-mono);
+        }
+        .card-content {
+            flex: 1;
+            padding: 16px 18px;
+            min-width: 0;
+        }
+
+        /* 品牌名行 */
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .brand-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f0e0d0;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+        .brand-name .highlight {
+            color: #e8c596;
+        }
+
+        /* 属性标签 */
+        .tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 9px;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            background: var(--tag-bg);
+            border: 1px solid var(--tag-border);
+            color: #bbb;
+            white-space: nowrap;
+        }
+        .tag.scene-tag {
+            border-color: rgba(180, 160, 140, 0.2);
+            background: rgba(180, 160, 140, 0.05);
+            color: #c8b898;
+        }
+        .tag.style-tag {
+            border-color: rgba(200, 155, 100, 0.25);
+            background: rgba(200, 155, 100, 0.07);
+            color: #d4b080;
+            font-weight: 600;
+        }
+        .tag.material-tag {
+            border-color: rgba(160, 160, 170, 0.2);
+            background: rgba(160, 160, 170, 0.04);
+            color: #b0b0b8;
+        }
+        .tag.light-tag {
+            border-color: rgba(200, 170, 120, 0.2);
+            background: rgba(200, 170, 120, 0.05);
+            color: #c8b080;
+        }
+        .tag.color-tag {
+            border-color: rgba(190, 140, 100, 0.2);
+            background: rgba(190, 140, 100, 0.05);
+            color: #c89878;
+        }
+
+        /* 爆款传播语 */
+        .slogan-bar {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(200, 155, 100, 0.06);
+            border-left: 3px solid #c89b64;
+            font-size: 13px;
+            font-weight: 600;
+            color: #e8c596;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .slogan-icon {
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+
+        /* 折叠详情 */
+        .detail-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 11.5px;
+            color: #888;
+            letter-spacing: 0.4px;
+            padding: 6px 0;
+            transition: color 0.2s;
+            user-select: none;
+            font-weight: 500;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+        .detail-toggle:hover {
+            color: #c89b64;
+        }
+        .detail-toggle .arrow {
+            display: inline-block;
+            transition: transform 0.3s;
+            font-size: 10px;
+        }
+        .detail-toggle.open .arrow {
+            transform: rotate(90deg);
+        }
+        .detail-panel {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s ease, padding 0.35s ease;
+            padding: 0 4px;
+            font-size: 12px;
+            color: #999;
+            line-height: 1.7;
+            letter-spacing: 0.2px;
+            border-top: 0px solid transparent;
+            transition: max-height 0.45s ease, padding 0.35s ease, border-color 0.35s ease;
+        }
+        .detail-panel.expanded {
+            max-height: 600px;
+            padding: 10px 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 6px;
+        }
+        .detail-panel .detail-line {
+            padding: 3px 0;
+            color: #888;
+        }
+        .detail-panel .detail-label {
+            color: #aaa;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.4px;
+        }
+
+        /* 操作按钮区 */
+        .card-action {
+            flex: 0 0 52px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 16px;
+            background: #111;
+            border-left: 1px solid rgba(255, 255, 255, 0.03);
+            flex-shrink: 0;
+        }
+        .copy-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1.5px solid rgba(200, 155, 100, 0.3);
+            cursor: pointer;
+            background: rgba(200, 155, 100, 0.06);
+            color: #c89b64;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-weight: 600;
+            position: relative;
+        }
+        .copy-btn:hover {
+            background: rgba(200, 155, 100, 0.15);
+            border-color: #c89b64;
+            color: #e8c596;
+            box-shadow: 0 0 14px rgba(200, 155, 100, 0.2);
+            transform: scale(1.08);
+        }
+        .copy-btn:active {
+            transform: scale(0.9);
+            transition: all 0.08s;
+        }
+        .copy-btn.copied {
+            background: #2a4a2e !important;
+            border-color: #3a6a3e !important;
+            color: #8ee890 !important;
+            box-shadow: 0 0 16px rgba(70, 160, 70, 0.3) !important;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-12px);
+            background: #1e3a1e;
+            border: 1px solid rgba(100, 200, 100, 0.25);
+            color: #b8e8b8;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.8px;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s, transform 0.35s;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #444;
+            font-size: 13.5px;
+            letter-spacing: 1px;
+        }
+        .empty-state .big-icon {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 16px;
+            opacity: 0.3;
+            filter: grayscale(0.4);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 650px) {
+            body {
+                padding: 16px 8px 50px;
+            }
+            .header h2 {
+                font-size: 19px;
+            }
+            .panel {
+                padding: 18px 14px;
+                border-radius: 14px;
+            }
+            .select-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .select-group {
+                min-width: 100%;
+            }
+            .style-grid {
+                gap: 7px;
+            }
+            .style-card {
+                padding: 8px 11px;
+                font-size: 11.5px;
+                border-radius: 8px;
+            }
+            .card-content {
+                padding: 12px 10px;
+            }
+            .card-index {
+                flex: 0 0 34px;
+                font-size: 10px;
+                padding-top: 14px;
+            }
+            .card-action {
+                flex: 0 0 40px;
+                padding-top: 12px;
+            }
+            .copy-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 11px;
+                border-radius: 6px;
+            }
+            .brand-name {
+                font-size: 14px;
+            }
+            .tag {
+                font-size: 10px;
+                padding: 4px 7px;
+            }
+            .btn-generate {
+                font-size: 14px;
+                padding: 14px 16px;
+            }
+            .slogan-bar {
+                font-size: 11.5px;
+            }
+            .detail-panel {
+                font-size: 10.5px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<h2>🔥 烧烤夜宵门头AI · 视角锁定增强版 V3</h2>
+    <!-- Toast -->
+    <div class="toast" id="toast">✓ 已复制到剪贴板</div>
 
-<input id="input" placeholder="输入：店名 + 品类 + 风格（如：老王烧烤 夜宵 烟火气）">
-<button onclick="go()">生成20组商业门头提示词</button>
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <span class="icon">🔥</span>
+            <h2>烧烤夜宵门头AI · 旗舰版</h2>
+            <span class="badge">AR 16:9 · 广角平视 · 横向超宽</span>
+        </div>
 
-<div id="box"></div>
+        <!-- 输入面板 -->
+        <div class="panel">
+            <div class="label-row"><span class="dot"></span> 品牌信息</div>
+            <input id="input" type="text" placeholder="输入：店名 + 品类 + 风格关键词（如：老王烧烤 夜宵 烟火气）">
 
-<script>
+            <div class="select-row">
+                <div class="select-group">
+                    <label>🧱 门头材质</label>
+                    <select id="materialSelect">
+                        <option value="random">🎲 随机材质（每组变化）</option>
+                        <option value="通体发光大字">通体发光大字</option>
+                        <option value="亚克力灯箱">亚克力灯箱</option>
+                        <option value="金属烤漆边框+发光字">金属烤漆边框+发光字</option>
+                        <option value="LED霓虹灯管">LED霓虹灯管</option>
+                        <option value="吸塑立体发光字">吸塑立体发光字</option>
+                        <option value="不锈钢拉丝面板+灯箱">不锈钢拉丝面板+灯箱</option>
+                        <option value="铝塑板+3D发光字">铝塑板+3D发光字</option>
+                        <option value="3D浮雕发光字">3D浮雕发光字</option>
+                        <option value="冲孔发光字面板">冲孔发光字面板</option>
+                        <option value="柔性霓虹灯带+亚克力">柔性霓虹灯带+亚克力</option>
+                        <option value="超宽LED屏+发光字组合">超宽LED屏+发光字组合</option>
+                        <option value="镀锌板烤漆+贯通灯箱">镀锌板烤漆+贯通灯箱</option>
+                        <option value="超白玻+金属字贴面">超白玻+金属字贴面</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label>📍 商圈场景</label>
+                    <select id="sceneSelect">
+                        <option value="random">🎲 随机商圈（每组变化）</option>
+                        <option value="夜市核心流量区">夜市核心流量区</option>
+                        <option value="社区深夜消费区">社区深夜消费区</option>
+                        <option value="商业街黄金铺位">商业街黄金铺位</option>
+                        <option value="大学夜宵聚集区">大学夜宵聚集区</option>
+                        <option value="网红打卡街区">网红打卡街区</option>
+                        <option value="城市夜经济核心商圈">城市夜经济核心商圈</option>
+                        <option value="交通枢纽夜宵区">交通枢纽夜宵区</option>
+                        <option value="大型社区底商">大型社区底商</option>
+                        <option value="美食街C位铺面">美食街C位铺面</option>
+                        <option value="夜间经济示范区">夜间经济示范区</option>
+                    </select>
+                </div>
+            </div>
 
-/* =========================
-   商业系统库
-========================= */
+            <!-- 风格选择图框 -->
+            <div class="style-selector">
+                <div class="label-row"><span class="dot"></span> 🎨 视觉风格（点击选择）</div>
+                <div class="style-grid" id="styleGrid"></div>
+            </div>
 
-const system = {
-  场景:[
-    "夜市核心流量区",
-    "社区深夜消费区",
-    "商业街黄金铺位",
-    "大学夜宵聚集区",
-    "网红打卡街区"
-  ],
+            <button class="btn-generate" onclick="go()">⚡ 生成 20 组超宽幅面门头提示词</button>
 
-  风格:[
-    "烟火气爆棚",
-    "深夜食堂氛围",
-    "夜市霸主气场",
-    "年轻社交聚集地",
-    "城市夜经济核心"
-  ],
+            <div class="info-bar">
+                <span>💡</span> 每组均包含：16:9宽屏 · 广角平视 · 横向超宽门头 · 弱化竖向分割 · 强化水平延伸
+            </div>
+        </div>
 
-  材质:[
-    "通体发光大字",
-    "亚克力灯箱",
-    "金属烤漆边框",
-    "LED霓虹灯管",
-    "吸塑立体发光字"
-  ],
-
-  灯光:[
-    "暖橙炭火光",
-    "高亮对比夜光",
-    "局部重点打光",
-    "柔光漫射系统",
-    "霓虹氛围灯光"
-  ],
-
-  色彩:[
-    "红橙高食欲配色",
-    "黑红强对比冲击",
-    "橙黄渐变炭火感",
-    "暖黄夜宵氛围",
-    "深色底+亮色字"
-  ],
-
-  爆款:[
-    "深夜不打烊",
-    "越夜越火爆",
-    "排队王门店",
-    "夜宵界天花板",
-    "一口上瘾",
-    "凌晨三点还爆满",
-    "本地人必吃",
-    "烧烤界顶流"
-  ],
-
-  /* =========================
-     视角锁定系统（核心升级）
-  ========================= */
-  视角锁定:[
-    "必须100%正面平视拍摄",
-    "镜头与门头立面完全垂直",
-    "禁止侧拍/斜拍/45度视角",
-    "禁止透视变形",
-    "建筑左右完全对称构图",
-    "商业街真实立面视角",
-    "行人视角高度拍摄"
-  ]
-}
-
-/* =========================
-   工具函数
-========================= */
-
-function r(arr){
-  return arr[Math.floor(Math.random()*arr.length)]
-}
-
-/* =========================
-   生成逻辑
-========================= */
-
-function build(name){
-
-  return `
-【商业烧烤夜宵门头设计】
-
-品牌：${name}
-场景：${r(system.场景)}
-
-风格：${r(system.风格)}
-
-材质：${r(system.材质)}
-
-灯光：${r(system.灯光)}
-
-色彩：${r(system.色彩)}
-
-爆款传播语：${r(system.爆款)}
-
-🔥 核心要求：
-5秒远距离识别 / 3秒记住品牌 / 1秒产生食欲
-
-📌 结构要求：
-${system.视角锁定.join("，")}
-
-🏗 建筑要求：
-完整实体门头结构（招牌+灯箱+橱窗+玻璃门），
-真实商业街可施工落地设计，
-
-🎯 最终效果：
-高人流吸引商业门头设计，
-夜间强识别系统，
-提升进店转化率`
-}
-
-/* =========================
-   去重生成
-========================= */
-
-function gen20(name){
-
-  let set = new Map()
-
-  while(set.size < 20){
-    let t = build(name)
-    set.set(t, t)
-  }
-
-  return [...set.values()]
-}
-
-/* =========================
-   渲染
-========================= */
-
-function go(){
-
-  let val = document.getElementById("input").value.trim()
-  if(!val){
-    alert("请输入内容")
-    return
-  }
-
-  window.DATA = gen20(val)
-
-  let html = ""
-
-  window.DATA.forEach((t,i)=>{
-    html += `
-    <div class="item">
-      <div class="text">${i+1}. ${t}</div>
-      <div class="action">
-        <button class="copy-btn" onclick="copy(${i},this)">⧉</button>
-      </div>
+        <!-- 结果展示区 -->
+        <div id="box">
+            <div class="empty-state">
+                <span class="big-icon">🥓</span>
+                <span>输入品牌信息，选择风格，点击生成按钮<br>即可获得 20 组专业级门头设计提示词</span>
+            </div>
+        </div>
     </div>
-    `
-  })
 
-  document.getElementById("box").innerHTML = html
-}
+    <script>
+        /* ================================================================
+           商业系统库
+        ================================================================ */
+        const system = {
+            场景: [
+                "夜市核心流量区", "社区深夜消费区", "商业街黄金铺位", "大学夜宵聚集区",
+                "网红打卡街区", "城市夜经济核心商圈", "交通枢纽夜宵区", "大型社区底商",
+                "美食街C位铺面", "夜间经济示范区"
+            ],
+            风格: [
+                "烟火气爆棚", "深夜食堂氛围", "夜市霸主气场", "年轻社交聚集地",
+                "城市夜经济核心", "江湖烧烤大排档风", "新中式国潮烧烤", "工业风硬核烧烤"
+            ],
+            材质: [
+                "通体发光大字", "亚克力灯箱", "金属烤漆边框+发光字", "LED霓虹灯管",
+                "吸塑立体发光字", "不锈钢拉丝面板+灯箱", "铝塑板+3D发光字", "3D浮雕发光字",
+                "冲孔发光字面板", "柔性霓虹灯带+亚克力", "超宽LED屏+发光字组合",
+                "镀锌板烤漆+贯通灯箱", "超白玻+金属字贴面"
+            ],
+            灯光: [
+                "暖橙炭火光", "高亮对比夜光", "局部重点打光", "柔光漫射系统",
+                "霓虹氛围灯光", "水平灯带贯穿式照明", "暖黄泛光+局部高亮", "多层次立体打光"
+            ],
+            色彩: [
+                "红橙高食欲配色", "黑红强对比冲击", "橙黄渐变炭火感", "暖黄夜宵氛围",
+                "深色底+亮色字", "暗黑底+荧光橙", "焦糖色+奶油白", "炭黑+烈焰红+金"
+            ],
+            爆款: [
+                "深夜不打烊", "越夜越火爆", "排队王门店", "夜宵界天花板",
+                "一口上瘾", "凌晨三点还爆满", "本地人必吃", "烧烤界顶流",
+                "夜猫子聚集地", "烟火气拉满", "全城夜宵王", "吃完还想吃"
+            ],
+            视角锁定: [
+                "画面比例严格16:9宽屏",
+                "广角镜头完整展示门头全宽",
+                "镜头与门头立面100%垂直平视",
+                "行人平视视角拍摄（镜头高度约1.6米）",
+                "展示完整门头左右边界，无裁切",
+                "横向超宽幅面构图",
+                "弱化竖向分割线和立柱",
+                "强化水平延伸视觉线条",
+                "开阔舒展大气的视觉效果",
+                "建筑左右完全对称构图",
+                "水平方向视觉权重占主导",
+                "禁止侧拍/斜拍/45度视角",
+                "禁止透视变形和畸变",
+                "广角平视，一览无余"
+            ]
+        };
 
-/* =========================
-   复制功能
-========================= */
+        const styleIcons = {
+            "烟火气爆棚": "🔥",
+            "深夜食堂氛围": "🏮",
+            "夜市霸主气场": "👑",
+            "年轻社交聚集地": "🎉",
+            "城市夜经济核心": "🌃",
+            "江湖烧烤大排档风": "🍖",
+            "新中式国潮烧烤": "🀄️",
+            "工业风硬核烧烤": "⚙️"
+        };
+        const randomIcon = "🎲";
+        let selectedStyle = "random";
 
-function copy(index,btn){
+        function r(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-  navigator.clipboard.writeText(window.DATA[index])
+        /* ================================================================
+           风格图框渲染
+        ================================================================ */
+        function renderStyleCards() {
+            const grid = document.getElementById("styleGrid");
+            let html =
+                `<div class="style-card random-card ${selectedStyle === 'random' ? 'selected' : ''}" 
+                      data-style="random" onclick="selectStyle('random', this)">
+                    <span class="style-icon">${randomIcon}</span> 随机风格
+                </div>`;
+            system.风格.forEach(style => {
+                const icon = styleIcons[style] || "✨";
+                html += `<div class="style-card ${selectedStyle === style ? 'selected' : ''}" 
+                          data-style="${style}" onclick="selectStyle('${style}', this)">
+                            <span class="style-icon">${icon}</span> ${style}
+                        </div>`;
+            });
+            grid.innerHTML = html;
+        }
 
-  btn.innerHTML = "✓"
-  btn.style.background = "#555"
+        function selectStyle(style, element) {
+            selectedStyle = style;
+            document.querySelectorAll('.style-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        renderStyleCards();
 
-  setTimeout(()=>{
-    btn.innerHTML = "⧉"
-    btn.style.background = "linear-gradient(135deg,#ff3c00,#ff8a00)"
-  },800)
-}
+        /* ================================================================
+           生成单条提示词
+        ================================================================ */
+        function build(name, materialChoice, sceneChoice, styleChoice) {
+            const material = (materialChoice && materialChoice !== "random") ? materialChoice : r(system.材质);
+            const scene = (sceneChoice && sceneChoice !== "random") ? sceneChoice : r(system.场景);
+            const style = (styleChoice && styleChoice !== "random") ? styleChoice : r(system.风格);
 
-</script>
+            return `【商业烧烤夜宵门头设计 · 超宽幅面】
+
+        品牌：${name}
+        场景：${scene}
+
+        风格：${style}
+
+        材质：${material}
+
+        灯光：${r(system.灯光)}
+
+        色彩：${r(system.色彩)}
+
+        爆款传播语：${r(system.爆款)}
+
+        🔥 核心要求：
+        5秒远距离识别 / 3秒记住品牌 / 1秒产生食欲
+        横向超宽大幅面门头，弱化竖向分割，强化水平延伸感
+        广角平视视角，展示完整门头宽度，整体开阔舒展大气
+
+        📌 画面与视角要求：
+        ${system.视角锁定.join("，")}
+
+        🏗 建筑结构要求：
+        横向超宽实体门头结构（门头宽度8-15米，招牌+灯箱+橱窗+玻璃门），
+        贯通式水平招牌设计，弱化竖向立柱分割，
+        强化水平延伸线条，水平灯带贯穿整个门头，
+        减少竖向视觉打断，真实商业街可施工落地设计，
+        超宽幅面招牌系统，招牌长度远大于高度
+
+        🎯 最终效果：
+        高人流吸引力商业门头设计，
+        夜间强识别系统，
+        超宽屏16:9画面呈现，
+        提升进店转化率，
+        广角镜头下一览无余的霸气门头`;
+        }
+
+        /* ================================================================
+           生成20组（去重）
+        ================================================================ */
+        function gen20(name, materialChoice, sceneChoice, styleChoice) {
+            const set = new Map();
+            let attempts = 0;
+            while (set.size < 20 && attempts < 500) {
+                const t = build(name, materialChoice, sceneChoice, styleChoice);
+                if (!set.has(t)) set.set(t, t);
+                attempts++;
+            }
+            const results = [...set.values()];
+            while (results.length < 20) {
+                const t = build(name, materialChoice, sceneChoice, styleChoice);
+                results.push(t + `\n[变体编号: ${results.length + 1}]`);
+            }
+            return results.slice(0, 20);
+        }
+
+        /* ================================================================
+           解析提示词为结构化数据
+        ================================================================ */
+        function parsePrompt(text) {
+            const data = {};
+            try {
+                // 品牌
+                const brandMatch = text.match(/品牌：(.+)/);
+                data.brand = brandMatch ? brandMatch[1].trim() : '';
+
+                // 场景
+                const sceneMatch = text.match(/场景：(.+)/);
+                data.scene = sceneMatch ? sceneMatch[1].trim() : '';
+
+                // 风格
+                const styleMatch = text.match(/风格：(.+)/);
+                data.style = styleMatch ? styleMatch[1].trim() : '';
+
+                // 材质
+                const materialMatch = text.match(/材质：(.+)/);
+                data.material = materialMatch ? materialMatch[1].trim() : '';
+
+                // 灯光
+                const lightMatch = text.match(/灯光：(.+)/);
+                data.lighting = lightMatch ? lightMatch[1].trim() : '';
+
+                // 色彩
+                const colorMatch = text.match(/色彩：(.+)/);
+                data.color = colorMatch ? colorMatch[1].trim() : '';
+
+                // 爆款传播语
+                const sloganMatch = text.match(/爆款传播语：(.+)/);
+                data.slogan = sloganMatch ? sloganMatch[1].trim() : '';
+
+                // 核心要求
+                const coreMatch = text.match(/🔥 核心要求：\n([\s\S]*?)(?=📌|$)/);
+                data.coreReq = coreMatch ? coreMatch[1].trim() : '';
+
+                // 视角要求
+                const perspMatch = text.match(/📌 画面与视角要求：\n([\s\S]*?)(?=🏗|$)/);
+                data.perspectiveReq = perspMatch ? perspMatch[1].trim() : '';
+
+                // 建筑结构
+                const structMatch = text.match(/🏗 建筑结构要求：\n([\s\S]*?)(?=🎯|$)/);
+                data.structureReq = structMatch ? structMatch[1].trim() : '';
+
+                // 最终效果
+                const effectMatch = text.match(/🎯 最终效果：\n([\s\S]*)/);
+                data.finalEffect = effectMatch ? effectMatch[1].trim() : '';
+
+                return data;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /* ================================================================
+           渲染结果卡片
+        ================================================================ */
+        function renderResultCard(parsed, rawText, index) {
+            if (!parsed || !parsed.brand) {
+                // 回退：直接展示原始文本
+                return `
+                <div class="result-card">
+                    <div class="card-body">
+                        <div class="card-index">${index + 1}</div>
+                        <div class="card-content">
+                            <div style="font-size:13px;color:#bbb;line-height:1.7;white-space:pre-wrap;">${escapeHtml(rawText)}</div>
+                        </div>
+                        <div class="card-action">
+                            <button class="copy-btn" onclick="copy(${index}, this)" title="复制提示词">⧉</button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            return `
+            <div class="result-card">
+                <div class="card-body">
+                    <div class="card-index">${index + 1}</div>
+                    <div class="card-content">
+                        <!-- 品牌名 + 风格 -->
+                        <div class="brand-row">
+                            <span class="brand-name">${escapeHtml(parsed.brand)}</span>
+                        </div>
+
+                        <!-- 属性标签 -->
+                        <div class="tags-row">
+                            ${parsed.style ? `<span class="tag style-tag">🎨 ${escapeHtml(parsed.style)}</span>` : ''}
+                            ${parsed.scene ? `<span class="tag scene-tag">📍 ${escapeHtml(parsed.scene)}</span>` : ''}
+                            ${parsed.material ? `<span class="tag material-tag">🧱 ${escapeHtml(parsed.material)}</span>` : ''}
+                            ${parsed.lighting ? `<span class="tag light-tag">💡 ${escapeHtml(parsed.lighting)}</span>` : ''}
+                            ${parsed.color ? `<span class="tag color-tag">🎯 ${escapeHtml(parsed.color)}</span>` : ''}
+                        </div>
+
+                        <!-- 爆款传播语 -->
+                        ${parsed.slogan ? `
+                        <div class="slogan-bar">
+                            <span class="slogan-icon">💬</span> ${escapeHtml(parsed.slogan)}
+                        </div>` : ''}
+
+                        <!-- 折叠详情 -->
+                        <button class="detail-toggle" onclick="toggleDetail(this)" aria-expanded="false">
+                            <span class="arrow">▸</span> 展开设计详情
+                        </button>
+                        <div class="detail-panel">
+                            ${parsed.coreReq ? `<div class="detail-line"><span class="detail-label">🔥 核心要求：</span>${escapeHtml(parsed.coreReq)}</div>` : ''}
+                            ${parsed.perspectiveReq ? `<div class="detail-line"><span class="detail-label">📌 视角锁定：</span>${escapeHtml(parsed.perspectiveReq)}</div>` : ''}
+                            ${parsed.structureReq ? `<div class="detail-line"><span class="detail-label">🏗 建筑结构：</span>${escapeHtml(parsed.structureReq)}</div>` : ''}
+                            ${parsed.finalEffect ? `<div class="detail-line"><span class="detail-label">🎯 最终效果：</span>${escapeHtml(parsed.finalEffect)}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="copy-btn" onclick="copy(${index}, this)" title="复制完整提示词">⧉</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /* ================================================================
+           折叠/展开详情
+        ================================================================ */
+        function toggleDetail(btn) {
+            const panel = btn.nextElementSibling;
+            const isOpen = panel.classList.contains('expanded');
+            if (isOpen) {
+                panel.classList.remove('expanded');
+                btn.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.querySelector('.arrow').textContent = '▸';
+                btn.childNodes[1] && (btn.childNodes[1].textContent = ' 展开设计详情');
+            } else {
+                panel.classList.add('expanded');
+                btn.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.querySelector('.arrow').textContent = '▾';
+                btn.childNodes[1] && (btn.childNodes[1].textContent = ' 收起设计详情');
+            }
+        }
+
+        /* ================================================================
+           主函数：生成并渲染
+        ================================================================ */
+        function go() {
+            const val = document.getElementById("input").value.trim();
+            if (!val) {
+                const inputEl = document.getElementById("input");
+                inputEl.style.borderColor = "#d4783b";
+                inputEl.style.boxShadow = "0 0 0 4px rgba(212,120,59,0.15)";
+                inputEl.focus();
+                setTimeout(() => {
+                    inputEl.style.borderColor = "rgba(255,255,255,0.08)";
+                    inputEl.style.boxShadow = "none";
+                }, 700);
+                return;
+            }
+
+            const materialChoice = document.getElementById("materialSelect").value;
+            const sceneChoice = document.getElementById("sceneSelect").value;
+            const styleChoice = selectedStyle;
+
+            // 生成原始提示词
+            window.DATA = gen20(val, materialChoice, sceneChoice, styleChoice);
+            // 预解析
+            window.PARSED = window.DATA.map(t => parsePrompt(t));
+
+            // 渲染
+            let html = "";
+            window.DATA.forEach((raw, i) => {
+                html += renderResultCard(window.PARSED[i], raw, i);
+            });
+            document.getElementById("box").innerHTML = html;
+
+            // 平滑滚动
+            document.getElementById("box").scrollIntoView({ behavior: "smooth", block: "start" });
+
+            // 按钮反馈
+            const btn = document.querySelector(".btn-generate");
+            const orig = btn.textContent;
+            btn.textContent = "✅ 已生成 20 组";
+            btn.style.background = "linear-gradient(135deg, #3a5a3a, #4a7a4a)";
+            btn.style.boxShadow = "0 6px 24px rgba(60,140,60,0.3)";
+            setTimeout(() => {
+                btn.textContent = orig;
+                btn.style.background = "linear-gradient(135deg, #c87830, #d4893a, #c87830)";
+                btn.style.boxShadow = "0 6px 28px rgba(180,100,40,0.25)";
+            }, 1300);
+        }
+
+        /* ================================================================
+           复制功能
+        ================================================================ */
+        function copy(index, btn) {
+            const text = window.DATA[index];
+            if (!text) return;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showCopySuccess(btn);
+            }).catch(() => {
+                // 降级
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                ta.style.position = "fixed";
+                ta.style.left = "-9999px";
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand("copy");
+                    showCopySuccess(btn); } catch (e) { alert("复制失败，请手动复制"); }
+                document.body.removeChild(ta);
+            });
+        }
+
+        function showCopySuccess(btn) {
+            btn.innerHTML = "✓";
+            btn.classList.add("copied");
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 1600);
+            setTimeout(() => {
+                btn.innerHTML = "⧉";
+                btn.classList.remove("copied");
+            }, 950);
+        }
+
+        /* ================================================================
+           键盘快捷键
+        ================================================================ */
+        document.addEventListener("keydown", function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                e.preventDefault();
+                go();
+            }
+        });
+
+        console.log("🔥 烧烤夜宵门头AI · 旗舰版 V6 已就绪");
+        console.log("   - 结构化结果卡片 · 折叠详情 · 标签化属性");
+        console.log("   - 材质/商圈/风格 三维选择");
+        console.log("   - 16:9宽屏 · 广角平视 · 横向超宽门头");
+        console.log("   - Ctrl+Enter 快捷生成");
+    </script>
 
 </body>
 </html>
